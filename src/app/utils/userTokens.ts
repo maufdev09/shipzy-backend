@@ -1,4 +1,4 @@
-import { httpStatus } from 'http-status-codes';
+import  httpStatus  from 'http-status-codes';
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import { IsActive, IUser } from "../modules/user/user.interface";

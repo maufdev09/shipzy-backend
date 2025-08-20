@@ -1,6 +1,6 @@
 import { Role } from "./../user/user.interface";
 import httpStatus from "http-status-codes";
-import { IParcel, TParcelStatus } from "./parcel.interface";
+import { IParcel,  TParcelStatus } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
 import AppError from "../../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
@@ -53,13 +53,16 @@ const cancelParcel = async (Id: string, decodedToken: JwtPayload) => {
     parcel.status === TParcelStatus.APPROVED ||
     parcel.status === TParcelStatus.REQUESTED
   ) {
-    const statusLog = {
+    const statusLog= {
       status: TParcelStatus.CANCELED,
       timestamp: new Date(),
       location: parcel.senderAddress,
       updatedBy: `${decodedToken.role}`,
     };
 
+    if (!parcel.statusLog) {
+      parcel.statusLog = [];
+    }
     parcel.statusLog.push(statusLog);
     parcel.status = TParcelStatus.CANCELED;
     parcel.isBlocked = true;
@@ -80,13 +83,13 @@ const cancelParcel = async (Id: string, decodedToken: JwtPayload) => {
   }
 };
 
-const senderParcel = async (payload: Partial<IParcel>) => {
-  const { userId } = payload;
+const senderParcel = async (payload:any) => {
+  const  userId  = payload.userId;
   const parcel = await Parcel.find({ sender: userId });
 
   return parcel;
 };
-const receiverParcel = async (payload: Partial<IParcel>) => {
+const receiverParcel = async (payload: any) => {
   const { userId } = payload;
   const parcel = await Parcel.find({ receiver: userId });
 
@@ -131,7 +134,9 @@ const confirmParcel = async (Id: string, decodedToken: JwtPayload) => {
       location: IfparcelExist.senderAddress,
       updatedBy: `${decodedToken.role}`,
     };
-
+ if (!IfparcelExist.statusLog) {
+      IfparcelExist.statusLog = [];
+    }
     IfparcelExist.statusLog.push(statusLog);
     IfparcelExist.status = TParcelStatus.DELIVERED;
     const parcel = await IfparcelExist.save();

@@ -55,7 +55,7 @@ const getAllUser = catchAsync(
   success: true,
   message: "User created successfully",
   data: result.user,
-  meta: result.total,
+  meta: { total: result.total },
 })
   }
 );

@@ -3,6 +3,7 @@ import { catchAsync } from '../../utils/catchAsync';
 import { SendResponse } from '../../utils/sendResponse';
 import { Parcel } from './parcel.model';
 import { ParcelService } from './parcel.service';
+import { IParcel } from './parcel.interface';
 
 
 
@@ -34,10 +35,12 @@ const  Id  = req.params.id;
 })
 const senderParcel= catchAsync(async(req, res, next) => {
 
+    if (!req.user) {
+        return next(new Error("User not authenticated"));
+    }
+    const verifiedToken = req.user as Partial<IParcel>;
 
-    const verifiedToken = req.user as JwtPayload; 
-
-    const parcel = await ParcelService.senderParcel( verifiedToken);
+    const parcel = await ParcelService.senderParcel(verifiedToken);
 
      SendResponse(res,{
         statusCode: 200,
@@ -49,7 +52,7 @@ const senderParcel= catchAsync(async(req, res, next) => {
 const receiverParcel= catchAsync(async(req, res, next) => {
 
 
-    const verifiedToken = req.user as JwtPayload; 
+    const verifiedToken = req.user as Partial<IParcel>
 
     const parcel = await ParcelService.receiverParcel( verifiedToken);
 
@@ -65,7 +68,7 @@ const confirmParcel= catchAsync(async(req, res, next) => {
 
   const  Id  = req.params.id;
 
-    const verifiedToken = req.user as JwtPayload; 
+    const verifiedToken = req.user as Partial<IParcel>
 
     const parcel = await ParcelService.confirmParcel(Id, verifiedToken);
 
@@ -82,7 +85,7 @@ const statuslogParcel= catchAsync(async(req, res, next) => {
 
   const  Id  = req.params.id;
 
-    const verifiedToken = req.user as JwtPayload; 
+    const verifiedToken = req.user as Partial<IParcel>
 
     const parcel = await ParcelService.statuslogParcel(Id, verifiedToken);
 

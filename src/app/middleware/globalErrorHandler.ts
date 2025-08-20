@@ -4,6 +4,7 @@ import AppError from "../errorHelpers/AppError";
 import { handleDuplicateError } from "../helpers/handleDuplicateError";
 import { handleZodError } from "../helpers/handleZodError";
 import { handlevalidationError } from "../helpers/handleValidation.Error";
+import { handlerCastError } from "../helpers/haldleCastErrors";
 
 
 

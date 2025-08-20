@@ -2,7 +2,7 @@ import {  Response } from "express";
 
 interface Tmeta {
    
-    total?: number;
+    total?: number|string;
 }
 
 

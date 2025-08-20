@@ -32,6 +32,7 @@ export const seedAdmin = async () => {
       auth: [authProvider],
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const newAdmin = await User.create(payload);
     console.log("Super Admin seeded successfully:",);
     

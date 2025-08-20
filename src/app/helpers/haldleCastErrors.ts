@@ -5,6 +5,6 @@ export const handlerCastError = (err: mongoose.Error.CastError):TGenericErrorRes
 
 return{
   statusCode : 400,
-  message : `Invalid mongoDB ObjectId. Please provide a valid Id`;
+  message : `Invalid mongoDB ObjectId. Please provide a valid Id`,
 }
 }
