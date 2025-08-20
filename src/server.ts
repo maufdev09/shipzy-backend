@@ -1,8 +1,9 @@
 
 import mongoose from "mongoose"
-import app from "./app";
 import {Server} from 'http'
 import { envVars } from "./app/config/env";
+import app from "./app";
+import { seedAdmin } from "./app/utils/seedSuperAdmin";
 
 
 let server: Server
@@ -24,7 +25,10 @@ server= app.listen(envVars.PORT,()=>{
 
 
 
-main() 
+(async()=>{
+    await main()
+    await seedAdmin()
+})()
 
 /**
  * unchanged rejection error

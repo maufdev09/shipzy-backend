@@ -1,12 +1,36 @@
-import express from "express"
-const app = express()
+import express from "express";
+import cors from "cors";
+import router from "./app/routes";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFound";
+import cookieParser from "cookie-parser";
+import passport from "passport";
+import expressSession from "express-session";
+import   "./app/config/passport"; // Ensure passport strategies are loaded
 
+const app = express();
 
-app.get("/",(req, res)=>{
+app.use(
+  expressSession({
+    secret: "your-secret", // Replace with your actual secret key
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.session());
+app.use(passport.initialize());
 
-res.send("hello world")
+app.use(cookieParser());
+app.use(express.json());
+app.use(cors());
 
-})
+app.use("/api/v1", router);
 
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
 
-export default app
+app.use(globalErrorHandler);
+
+app.use(notFound);
+export default app;
