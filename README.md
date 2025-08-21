@@ -50,16 +50,16 @@ npm run build
 npx ts-node-dev src/server.ts
 ```
 ### Configure environment variables:
--PORT
--DB_URL
--JWT_ACCESS_SECRET,
--JWT_REFRESH_SECRET
--SUPER_ADMIN_EMAIL,
--SUPER_ADMIN_PASSWORD
--GOOGLE_CLIENT_ID,
--GOOGLE_CLIENT_SECRET,
--GOOGLE_CALLBACK_URL
--FRONTEND_URL
+- PORT
+- DB_URL
+- JWT_ACCESS_SECRET,
+- JWT_REFRESH_SECRET
+- SUPER_ADMIN_EMAIL,
+- SUPER_ADMIN_PASSWORD
+- GOOGLE_CLIENT_ID,
+- GOOGLE_CLIENT_SECRET,
+- GOOGLE_CALLBACK_URL
+- FRONTEND_URL
 
 -# API Endpoints
 
@@ -83,10 +83,8 @@ npx ts-node-dev src/server.ts
 "email":"marufdev05@gmail.com",
 "password":"Maruf6589@",
 "role":"RECEIVER"
-}
-```
+},
 <!-- or login as a Admin  -->
-```json
 {
 "email":"marufdev10@gmail.com",
 "password":"marufdev90@gmail.com"
