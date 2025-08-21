@@ -1,6 +1,6 @@
 # Shipzy Backend
 
-Shipzy Backend is an Express.js REST API for a parcel delivery platform. It supports user authentication (including Google OAuth), parcel management, and role-based access control. The backend is built with TypeScript, MongoDB (via Mongoose), and Passport.js for authentication.
+Shipzy Backend is an Express.js REST API for a parcel delivery platform. 
 
 ## Features
 
@@ -9,8 +9,6 @@ Shipzy Backend is an Express.js REST API for a parcel delivery platform. It supp
 - Parcel creation, tracking, and status updates
 - Secure JWT authentication with refresh tokens
 - Global error handling and request validation
-- Environment-based configuration
-- Ready for deployment on Vercel
 
 ## Project Structure
 ├── src/ 

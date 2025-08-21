@@ -1,7 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { catchAsync } from '../../utils/catchAsync';
 import { SendResponse } from '../../utils/sendResponse';
-import { Parcel } from './parcel.model';
 import { ParcelService } from './parcel.service';
 import { IParcel } from './parcel.interface';
 
