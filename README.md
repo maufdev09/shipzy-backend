@@ -61,7 +61,7 @@ npx ts-node-dev src/server.ts
 - GOOGLE_CALLBACK_URL
 - FRONTEND_URL
 
--# API Endpoints
+# API Endpoints
 
 - `POST /api/v1/user/register` — Register a new user
 - `POST /api/v1/user//all- users` — Register a new user(Admin)
@@ -71,7 +71,7 @@ npx ts-node-dev src/server.ts
 - `POST /api/v1/auth/reset- password` — Reset password
 - `GET /api/v1/auth/google` — Google OAuth login
 - `POST /api/v1/parcels` — Create a parcel (Sender/Admin)
-- <!--  `note`: for creating percel you must have include valid sender and - reciver id  -- >
+- *note: for creating percel you must have include valid sender and reciver id *
 - `PATCH /api/v1/parcels/cancel/:id` — Cancel a parcel
 - `GET /api/v1/parcels/me ` — Get parcels sent by user
 - `GET /api/v1/parcels/incoming` — Get parcels received by user
