@@ -9,9 +9,11 @@ Shipzy Backend is an Express.js REST API for a parcel delivery platform.
 - Parcel creation, tracking, and status updates
 - Secure JWT authentication with refresh tokens
 - Global error handling and request validation
+  
 
+markdown
 ## Project Structure
-
+pgsql
 ├── src/
 │ ├── app.ts
 │ ├── server.ts
@@ -36,8 +38,9 @@ Shipzy Backend is an Express.js REST API for a parcel delivery platform.
 - MongoDB database (local or cloud)
 - Vercel account (for deployment)
 
+markdown
 ### Installation
-
+bash
 git clone https://github.com/maufdev09/shipzy-backend.git
 cd shipzy-backend
 npm install
@@ -62,23 +65,29 @@ FRONTEND_URL
 POST /api/v1/user/register — Register a new user(if you want to regiset)
 POST /api/v1/user//all-users — Register a new user(Admin)
 POST /api/v1/auth/login — Login with email/password
-{
-"email":"marufdev05@gmail.com",
-"password":"Maruf6589@",
-"role":"RECEIVER"
-}or login as a Admin{
-"email":"marufdev10@gmail.com",
-"password":"marufdev90@gmail.com"
-
-}
 POST /api/v1/auth/refresh-token — Get new access token
 POST /api/v1/auth/logout — Logout user
 POST /api/v1/auth/reset-password — Reset password
 GET /api/v1/auth/google — Google OAuth login
 POST /api/v1/parcels — Create a parcel (Sender/Admin)
-**note**: for creating percel you must have include valid sender and reciver id 
+<!-- **note**: for creating percel you must have include valid sender and reciver id  -->
 PATCH /api/v1/parcels/cancel/:id — Cancel a parcel
 GET /api/v1/parcels/me — Get parcels sent by user
 GET /api/v1/parcels/incoming — Get parcels received by user
 PATCH /api/v1/parcels/confirm/:id — Confirm parcel delivery
 GET /api/v1/parcels/:id/status-log — Get parcel status log
+
+
+json
+{
+"email":"marufdev05@gmail.com",
+"password":"Maruf6589@",
+"role":"RECEIVER"
+}
+
+<!-- or login as a Admin  -->
+{
+"email":"marufdev10@gmail.com",
+"password":"marufdev90@gmail.com"
+
+}
