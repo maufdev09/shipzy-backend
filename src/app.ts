@@ -23,7 +23,11 @@ app.use(passport.initialize());
 app.use(cookieParser());
 app.use(express.json());
 app.set("trust proxy",1)
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
 
 app.use("/api/v1", router);
 

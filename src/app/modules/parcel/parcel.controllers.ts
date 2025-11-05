@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import  httpStatus  from 'http-status-codes';
+import { Parcel } from './parcel.model';
 import { JwtPayload } from 'jsonwebtoken';
 import { catchAsync } from '../../utils/catchAsync';
 import { SendResponse } from '../../utils/sendResponse';
 import { ParcelService } from './parcel.service';
 import { IParcel } from './parcel.interface';
+import { NextFunction, Request, Response } from 'express';
 
 
 
@@ -44,7 +48,7 @@ const senderParcel= catchAsync(async(req, res, next) => {
      SendResponse(res,{
         statusCode: 200,
         success: true,
-        message: "Parcel canceled successfully",
+        message: "Parcel retrieved successfully",
         data: parcel,
     })
 })
@@ -58,7 +62,7 @@ const receiverParcel= catchAsync(async(req, res, next) => {
      SendResponse(res,{
         statusCode: 200,
         success: true,
-        message: "Parcel canceled successfully",
+        message: "Parcel retrieved successfully",
         data: parcel,
     })
 })
@@ -111,6 +115,40 @@ const allParcels= catchAsync(async(req, res, next) => {
         data: parcel,
     })
 })
+const getParcelOverview= catchAsync(async(req, res, next) => {
+
+
+ 
+
+    const result = await ParcelService.getParcelOverview()
+
+
+     SendResponse(res,{
+        statusCode: 200,
+        success: true,
+        message: "Parcelover view retrive successfully",
+        data: result,
+    })
+})
+const getStatusDistrubution= catchAsync(async(req, res, next) => {
+
+
+ 
+
+    const result = await ParcelService.getStatusDistrubution()
+
+
+     SendResponse(res,{
+        statusCode: 200,
+        success: true,
+        message: "getStatusDistrubution view retrive successfully",
+        data: result,
+    })
+})
+
+
+
+
 
 export const ParcelControllers = {
     createParcel,
@@ -119,5 +157,7 @@ export const ParcelControllers = {
     receiverParcel,
     confirmParcel,
     statuslogParcel,
-    allParcels
+    allParcels,
+    getParcelOverview,
+    getStatusDistrubution,
 } 

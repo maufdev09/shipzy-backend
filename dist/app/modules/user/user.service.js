@@ -77,8 +77,21 @@ const getAllUser = () => __awaiter(void 0, void 0, void 0, function* () {
     const total = yield user_model_1.User.countDocuments();
     return { user, total };
 });
+const getAllReceiver = () => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.find({ role: { $in: [user_interface_1.Role.RECEIVER, user_interface_1.Role.ADMIN] } });
+    const total = yield user_model_1.User.countDocuments({ role: { $in: [user_interface_1.Role.RECEIVER, user_interface_1.Role.ADMIN] } });
+    return { user, total };
+});
+const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findById(userId).select("-password");
+    return {
+        data: user
+    };
+});
 exports.UserService = {
     createUser,
     getAllUser,
     updateUser,
+    getMe,
+    getAllReceiver
 };

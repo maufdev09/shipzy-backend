@@ -42,7 +42,7 @@ const senderParcel = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(
     (0, sendResponse_1.SendResponse)(res, {
         statusCode: 200,
         success: true,
-        message: "Parcel canceled successfully",
+        message: "Parcel retrieved successfully",
         data: parcel,
     });
 }));
@@ -52,7 +52,7 @@ const receiverParcel = (0, catchAsync_1.catchAsync)((req, res, next) => __awaite
     (0, sendResponse_1.SendResponse)(res, {
         statusCode: 200,
         success: true,
-        message: "Parcel canceled successfully",
+        message: "Parcel retrieved successfully",
         data: parcel,
     });
 }));
@@ -87,6 +87,24 @@ const allParcels = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(vo
         data: parcel,
     });
 }));
+const getParcelOverview = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield parcel_service_1.ParcelService.getParcelOverview();
+    (0, sendResponse_1.SendResponse)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Parcelover view retrive successfully",
+        data: result,
+    });
+}));
+const getStatusDistrubution = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield parcel_service_1.ParcelService.getStatusDistrubution();
+    (0, sendResponse_1.SendResponse)(res, {
+        statusCode: 200,
+        success: true,
+        message: "getStatusDistrubution view retrive successfully",
+        data: result,
+    });
+}));
 exports.ParcelControllers = {
     createParcel,
     cancelParcel,
@@ -94,5 +112,7 @@ exports.ParcelControllers = {
     receiverParcel,
     confirmParcel,
     statuslogParcel,
-    allParcels
+    allParcels,
+    getParcelOverview,
+    getStatusDistrubution,
 };

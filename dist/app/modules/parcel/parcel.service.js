@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParcelService = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const user_interface_1 = require("./../user/user.interface");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const parcel_interface_1 = require("./parcel.interface");
@@ -68,11 +69,38 @@ const cancelParcel = (Id, decodedToken) => __awaiter(void 0, void 0, void 0, fun
     }
     catch (error) {
         yield session.abortTransaction();
-        throw (error);
+        throw error;
     }
     finally {
         session.endSession();
     }
+});
+const getParcelOverview = () => __awaiter(void 0, void 0, void 0, function* () {
+    const totalParcel = yield parcel_model_1.Parcel.countDocuments();
+    const delivered = yield parcel_model_1.Parcel.countDocuments({
+        status: `${parcel_interface_1.TParcelStatus.DELIVERED}`,
+    });
+    const inTransit = yield parcel_model_1.Parcel.countDocuments({
+        status: `${parcel_interface_1.TParcelStatus.IN_TRANSIT}`,
+    });
+    const pending = yield parcel_model_1.Parcel.countDocuments({
+        status: {
+            $in: [`${parcel_interface_1.TParcelStatus.REQUESTED}`, `${parcel_interface_1.TParcelStatus.CANCELED}`],
+        },
+    });
+    const data = { totalParcel, delivered, inTransit, pending };
+    return data;
+});
+const getStatusDistrubution = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield parcel_model_1.Parcel.aggregate([
+        {
+            $group: {
+                _id: "$status",
+                count: { $sum: 1 },
+            },
+        },
+    ]);
+    return result;
 });
 const senderParcel = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = payload.userId;
@@ -81,7 +109,7 @@ const senderParcel = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 });
 const receiverParcel = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = payload;
-    const parcel = yield parcel_model_1.Parcel.find({ receiver: userId });
+    const parcel = yield parcel_model_1.Parcel.find({ receiver: userId }).populate("sender");
     return parcel;
 });
 const confirmParcel = (Id, decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
@@ -121,11 +149,12 @@ const statuslogParcel = (Id, decodedToken) => __awaiter(void 0, void 0, void 0, 
     if (!IfparcelExist) {
         throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "Parcel not found");
     }
-    if (IfparcelExist.receiver.toString() !== decodedToken.userId && IfparcelExist.sender.toString() !== decodedToken.userId &&
+    if (IfparcelExist.receiver.toString() !== decodedToken.userId &&
+        IfparcelExist.sender.toString() !== decodedToken.userId &&
         decodedToken.role !== user_interface_1.Role.ADMIN) {
         throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "You are not allowed to get parcel status log ");
     }
-    // 
+    //
     if (IfparcelExist.isDeleted) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "sorry! the parcel was deleted");
     }
@@ -155,5 +184,7 @@ exports.ParcelService = {
     receiverParcel,
     confirmParcel,
     statuslogParcel,
-    allParcels
+    allParcels,
+    getStatusDistrubution,
+    getParcelOverview,
 };

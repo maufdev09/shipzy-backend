@@ -16,6 +16,7 @@ filter():this {
     const filter={...this.query};
 
 for(const field of  excluderFields) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete filter[field];
 }
 this.modelQuery= this.modelQuery.find(filter);

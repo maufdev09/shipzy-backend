@@ -11,6 +11,8 @@ const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const  user= await UserService.createUser(req.body);
 
+
+
    
 
 SendResponse(res,{
@@ -32,10 +34,11 @@ const updateUser = catchAsync(
 
     const verifiedToken = req.user as JwtPayload; // Assuming user is set by checkAuth middleware
     const payload=req.body;
+    console.log(payload);
+    
     const  user= await UserService.updateUser(userId, payload, verifiedToken);
 
    
-
 SendResponse(res,{
   statusCode: httpStatus.CREATED,
   success: true,
@@ -46,22 +49,61 @@ SendResponse(res,{
   }
 );
 
+
+
 const getAllUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+      
     const result = await UserService.getAllUser();
 
  SendResponse(res,{
   statusCode: httpStatus.CREATED,
   success: true,
-  message: "User created successfully",
+  message: "User retrieved successfully",
+  data: result.user,
+  meta: { total: result.total },
+})
+  }
+);
+const getAllReceiver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+
+    const result = await UserService.getAllReceiver();
+
+ SendResponse(res,{
+  statusCode: httpStatus.CREATED,
+  success: true,
+  message: "User retrieved successfully",
   data: result.user,
   meta: { total: result.total },
 })
   }
 );
 
+
+
+const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload
+    const result = await UserService.getMe(decodedToken.userId);
+
+    // res.status(httpStatus.OK).json({
+    //     success: true,
+    //     message: "All Users Retrieved Successfully",
+    //     data: users
+    // })
+    SendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "Your profile Retrieved Successfully",
+        data: result.data
+    })
+})
+
+
 export const UserControllers = {
   createUser,
   getAllUser,
-  updateUser
+  updateUser,
+  getMe,
+  getAllReceiver
 };

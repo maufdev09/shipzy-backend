@@ -15,10 +15,16 @@ router.post(
   UserControllers.createUser
 );
 router.get("/all-users", checkAuth(Role.ADMIN), UserControllers.getAllUser);
+router.get(
+  "/all-receivers",
+  checkAuth(Role.ADMIN, Role.SENDER),
+  UserControllers.getAllReceiver
+);
 router.patch(
   "/:id",
   checkAuth(...Object.values(Role)),
   UserControllers.updateUser
 );
+router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe);
 
 export const UserRoutes = router;

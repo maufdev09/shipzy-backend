@@ -32,6 +32,7 @@ const updateUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(vo
     // const verifiedToken=verifyToken(token as string, envVars.JWT_ACCESS_SECRET) as JwtPayload;
     const verifiedToken = req.user; // Assuming user is set by checkAuth middleware
     const payload = req.body;
+    console.log(payload);
     const user = yield user_service_1.UserService.updateUser(userId, payload, verifiedToken);
     (0, sendResponse_1.SendResponse)(res, {
         statusCode: http_status_codes_1.default.CREATED,
@@ -45,13 +46,40 @@ const getAllUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(vo
     (0, sendResponse_1.SendResponse)(res, {
         statusCode: http_status_codes_1.default.CREATED,
         success: true,
-        message: "User created successfully",
+        message: "User retrieved successfully",
         data: result.user,
         meta: { total: result.total },
+    });
+}));
+const getAllReceiver = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.UserService.getAllReceiver();
+    (0, sendResponse_1.SendResponse)(res, {
+        statusCode: http_status_codes_1.default.CREATED,
+        success: true,
+        message: "User retrieved successfully",
+        data: result.user,
+        meta: { total: result.total },
+    });
+}));
+const getMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const decodedToken = req.user;
+    const result = yield user_service_1.UserService.getMe(decodedToken.userId);
+    // res.status(httpStatus.OK).json({
+    //     success: true,
+    //     message: "All Users Retrieved Successfully",
+    //     data: users
+    // })
+    (0, sendResponse_1.SendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.CREATED,
+        message: "Your profile Retrieved Successfully",
+        data: result.data
     });
 }));
 exports.UserControllers = {
     createUser,
     getAllUser,
-    updateUser
+    updateUser,
+    getMe,
+    getAllReceiver
 };

@@ -24,6 +24,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthControllers = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const catchAsync_1 = require("../../utils/catchAsync");
 const auth_service_1 = require("./auth.service");
@@ -77,11 +79,13 @@ const logout = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0
         httpOnly: true,
         secure: false, // Set to true if using HTTPS
         sameSite: "lax", // Adjust as needed
+        path: "/",
     });
     res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: false, // Set to true if using HTTPS
         sameSite: "lax", // Adjust as needed
+        path: "/",
     });
     (0, sendResponse_1.SendResponse)(res, {
         statusCode: http_status_codes_1.default.CREATED,

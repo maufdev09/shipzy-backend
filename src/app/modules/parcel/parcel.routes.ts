@@ -15,4 +15,7 @@ router.get("/incoming", checkAuth(Role.RECEIVER, Role.ADMIN), ParcelControllers.
 router.patch("/confirm/:id", checkAuth(Role.RECEIVER, Role.ADMIN), ParcelControllers.confirmParcel);
 router.get("/:id/status-log", checkAuth(...Object.values(Role)), ParcelControllers.statuslogParcel);
 router.get("/admin/parcels", checkAuth( Role.ADMIN), ParcelControllers.allParcels);
+router.get("/admin/overview", checkAuth( Role.ADMIN), ParcelControllers.getParcelOverview);
+router.get("/admin/status-distubution", checkAuth( Role.ADMIN), ParcelControllers.getStatusDistrubution);
+
 export const ParcelRoutes = router;

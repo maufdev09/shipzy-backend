@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import { NextFunction, Request, Response } from "express";
@@ -78,11 +80,13 @@ const logout = catchAsync(
       httpOnly: true,
       secure: false, // Set to true if using HTTPS
       sameSite: "lax", // Adjust as needed
+          path:"/",
     });
     res.clearCookie("refreshToken",{
       httpOnly: true,
       secure: false, // Set to true if using HTTPS
       sameSite: "lax", // Adjust as needed
+      path:"/",
     });
 
     SendResponse(res, {
@@ -90,6 +94,8 @@ const logout = catchAsync(
       success: true,
       message: "User logged out successfully",
       data: null,
+       
+      
     });
   }
 );

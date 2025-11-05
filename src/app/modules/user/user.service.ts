@@ -98,9 +98,25 @@ const getAllUser = async () => {
 
   return { user, total };
 };
+const getAllReceiver = async () => {
+  const user = await User.find({ role: { $in: [Role.RECEIVER, Role.ADMIN] } });
+  const total = await User.countDocuments({ role: { $in: [Role.RECEIVER, Role.ADMIN] } });
+
+  return { user, total };
+};
+
+
+const getMe = async (userId: string) => {
+    const user = await User.findById(userId).select("-password");
+    return {
+        data: user
+    }
+};
 
 export const UserService = {
   createUser,
   getAllUser,
   updateUser,
+  getMe,
+  getAllReceiver
 };

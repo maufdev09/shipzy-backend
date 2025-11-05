@@ -15,4 +15,6 @@ router.get("/incoming", (0, checkAuth_1.checkAuth)(user_interface_1.Role.RECEIVE
 router.patch("/confirm/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.RECEIVER, user_interface_1.Role.ADMIN), parcel_controllers_1.ParcelControllers.confirmParcel);
 router.get("/:id/status-log", (0, checkAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), parcel_controllers_1.ParcelControllers.statuslogParcel);
 router.get("/admin/parcels", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), parcel_controllers_1.ParcelControllers.allParcels);
+router.get("/admin/overview", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), parcel_controllers_1.ParcelControllers.getParcelOverview);
+router.get("/admin/status-distubution", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), parcel_controllers_1.ParcelControllers.getStatusDistrubution);
 exports.ParcelRoutes = router;

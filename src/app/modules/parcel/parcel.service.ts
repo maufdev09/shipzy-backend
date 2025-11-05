@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Role } from "./../user/user.interface";
 import httpStatus from "http-status-codes";
-import { IParcel,  TParcelStatus } from "./parcel.interface";
+import { IParcel, TParcelStatus } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
 import AppError from "../../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
@@ -23,75 +24,106 @@ const createParcel = async (payload: Partial<IParcel>) => {
 };
 
 const cancelParcel = async (Id: string, decodedToken: JwtPayload) => {
-  const session= await mongoose.startSession()
+  const session = await mongoose.startSession();
   try {
     session.startTransaction();
     const parcel = await Parcel.findById(Id).session(session);
 
-  if (!parcel) {
-    throw new AppError(httpStatus.NOT_FOUND, "Parcel not found");
-  }
-
-  if (
-    parcel.sender.toString() !== decodedToken.userId &&
-    decodedToken.role !== Role.ADMIN
-  ) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You are not allowed to cancel this parcel"
-    );
-  }
-
-  if (parcel.isBlocked || parcel.isDeleted) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "You are not allowed to update isBlocked or isDeleted fields"
-    );
-  }
-
-  if (
-    parcel.status === TParcelStatus.APPROVED ||
-    parcel.status === TParcelStatus.REQUESTED
-  ) {
-    const statusLog= {
-      status: TParcelStatus.CANCELED,
-      timestamp: new Date(),
-      location: parcel.senderAddress,
-      updatedBy: `${decodedToken.role}`,
-    };
-
-    if (!parcel.statusLog) {
-      parcel.statusLog = [];
+    if (!parcel) {
+      throw new AppError(httpStatus.NOT_FOUND, "Parcel not found");
     }
-    parcel.statusLog.push(statusLog);
-    parcel.status = TParcelStatus.CANCELED;
-    parcel.isBlocked = true;
-    parcel.isDeleted = true;
-   await parcel.save({session});
-    await session.commitTransaction()
-    session.endSession()
 
-    return parcel;
-  }
-  throw new AppError(httpStatus.BAD_REQUEST, "You Cant cancel the parcel");
+    if (
+      parcel.sender.toString() !== decodedToken.userId &&
+      decodedToken.role !== Role.ADMIN
+    ) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not allowed to cancel this parcel"
+      );
+    }
+
+    if (parcel.isBlocked || parcel.isDeleted) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "You are not allowed to update isBlocked or isDeleted fields"
+      );
+    }
+
+    if (
+      parcel.status === TParcelStatus.APPROVED ||
+      parcel.status === TParcelStatus.REQUESTED
+    ) {
+      const statusLog = {
+        status: TParcelStatus.CANCELED,
+        timestamp: new Date(),
+        location: parcel.senderAddress,
+        updatedBy: `${decodedToken.role}`,
+      };
+
+      if (!parcel.statusLog) {
+        parcel.statusLog = [];
+      }
+      parcel.statusLog.push(statusLog);
+      parcel.status = TParcelStatus.CANCELED;
+      parcel.isBlocked = true;
+      parcel.isDeleted = true;
+      await parcel.save({ session });
+      await session.commitTransaction();
+      session.endSession();
+
+      return parcel;
+    }
+    throw new AppError(httpStatus.BAD_REQUEST, "You Cant cancel the parcel");
   } catch (error) {
     await session.abortTransaction();
-    throw(error)
-  }finally{
-    session.endSession()
-
+    throw error;
+  } finally {
+    session.endSession();
   }
 };
 
-const senderParcel = async (payload:any) => {
-  const  userId  = payload.userId;
+const getParcelOverview = async () => {
+  const totalParcel = await Parcel.countDocuments();
+  const delivered = await Parcel.countDocuments({
+    status: `${TParcelStatus.DELIVERED}`,
+  });
+  const inTransit = await Parcel.countDocuments({
+    status: `${TParcelStatus.IN_TRANSIT}`,
+  });
+  const pending = await Parcel.countDocuments({
+    status: {
+      $in: [`${TParcelStatus.REQUESTED}`, `${TParcelStatus.CANCELED}`],
+    },
+  });
+
+  const data = { totalParcel, delivered, inTransit, pending };
+
+  return data;
+};
+
+const getStatusDistrubution = async () => {
+  const result = await Parcel.aggregate([
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  return result;
+};
+
+const senderParcel = async (payload: any) => {
+  const userId = payload.userId;
   const parcel = await Parcel.find({ sender: userId });
 
   return parcel;
 };
 const receiverParcel = async (payload: any) => {
   const { userId } = payload;
-  const parcel = await Parcel.find({ receiver: userId });
+  const parcel = await Parcel.find({ receiver: userId }).populate("sender");
 
   return parcel;
 };
@@ -134,7 +166,7 @@ const confirmParcel = async (Id: string, decodedToken: JwtPayload) => {
       location: IfparcelExist.senderAddress,
       updatedBy: `${decodedToken.role}`,
     };
- if (!IfparcelExist.statusLog) {
+    if (!IfparcelExist.statusLog) {
       IfparcelExist.statusLog = [];
     }
     IfparcelExist.statusLog.push(statusLog);
@@ -154,7 +186,8 @@ const statuslogParcel = async (Id: string, decodedToken: JwtPayload) => {
   }
 
   if (
-    IfparcelExist.receiver.toString() !== decodedToken.userId && IfparcelExist.sender.toString() !== decodedToken.userId &&
+    IfparcelExist.receiver.toString() !== decodedToken.userId &&
+    IfparcelExist.sender.toString() !== decodedToken.userId &&
     decodedToken.role !== Role.ADMIN
   ) {
     throw new AppError(
@@ -162,10 +195,7 @@ const statuslogParcel = async (Id: string, decodedToken: JwtPayload) => {
       "You are not allowed to get parcel status log "
     );
   }
-// 
-
-
-
+  //
 
   if (IfparcelExist.isDeleted) {
     throw new AppError(httpStatus.BAD_REQUEST, "sorry! the parcel was deleted");
@@ -185,16 +215,16 @@ const statuslogParcel = async (Id: string, decodedToken: JwtPayload) => {
     },
   ]);
 
-  return statusLog
+  return statusLog;
 };
 
-const allParcels = async ( ) => {
+const allParcels = async () => {
   const parcel = await Parcel.find();
 
-  
-
-  return parcel
+  return parcel;
 };
+
+
 
 export const ParcelService = {
   createParcel,
@@ -203,5 +233,7 @@ export const ParcelService = {
   receiverParcel,
   confirmParcel,
   statuslogParcel,
-  allParcels
+  allParcels,
+  getStatusDistrubution,
+  getParcelOverview,
 };
